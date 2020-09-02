@@ -1,3 +1,4 @@
+const {resolve} = require('path');
 const express = require('express');
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
@@ -8,15 +9,53 @@ const app = express();
 
 /*
  * =======================================================================
- * ================ REACT config                     =====================
+ * =======================================================================
+ * =======================================================================
+ * =======================================================================
+ * =======================================================================
+ * =======================================================================
  * =======================================================================
  */
 
-app.use('/', express.static('public'));
+var clientBuildPath;
+
+if( process.env.NODE_ENV === 'development' ){
+
+  const webpack = require('webpack');
+  const webpackDevMiddleware = require('webpack-dev-middleware');
+  const webpackHotMiddleware = require('webpack-hot-middleware');
+  const webpackConfig = require('./config/webpack.config.dev');
+
+  const compiler = webpack(webpackConfig);
+
+  app.use(
+    webpackDevMiddleware(compiler, {
+      publicPath: webpackConfig.output.publicPath,
+      stats: {
+        colors: true
+      }
+    })
+  );
+
+  app.use(webpackHotMiddleware(compiler));
+  clientBuildPath = resolve(__dirname, 'build-dev', 'client')
+
+  // all other requests be handled by UI itself
+}else{
+
+  clientBuildPath = resolve(__dirname, 'build', 'client');
+
+  app.use('/', express.static(clientBuildPath));
+
+}
 
 /*
  * =======================================================================
- * ============== normal express routes go here   ========================
+ * =======================================================================
+ * =======================================================================
+ * =======================================================================
+ * =======================================================================
+ * =======================================================================
  * =======================================================================
  */
 
@@ -24,31 +63,21 @@ app.get('/banana', (request, response)=>{
   response.send("ehllo");
 });
 
-/*
- * =======================================================================
- * ==============   react express route           ========================
- * =======================================================================
- */
-
 app.get('/react', (req, res) => {
-  const myHtml = `
-    <html>
-      <body>
-        <h1>Wow, react</h1>
-        <div id="app"></div>
-        <script type="text/javascript" src="/main.js"></script>
-      </body>
-    </html>
-  `;
-  res.send( myHtml );
+  res.sendFile(resolve(clientBuildPath, 'index.html'))
 });
 
 /*
  * =======================================================================
- * ============                     LISTEN                   =============
+ * =======================================================================
+ * =======================================================================
+ * =======================================================================
+ * =======================================================================
+ * =======================================================================
  * =======================================================================
  */
 
+
 app.listen(process.env.PORT, () => {
-  console.log(`ssssserver is now running on http://localhost:${process.env.PORT}`);
+  console.log(`HTTP server is now running on http://localhost:${process.env.PORT}`);
 });
