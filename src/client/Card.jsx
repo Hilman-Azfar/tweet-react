@@ -8,7 +8,8 @@ import Actions from './Actions'
 
 class Card extends React.Component {
   render() {
-    let {created_at,entities : {media = null}, text, user : {name, screen_name}} = this.props.tweet;
+    let {created_at,entities : {media = null}, text, user : {name, screen_name}, retweet_count, favorite_count} = this.props.tweet;
+
     return (
         <div>
             <UserIcon />
@@ -18,7 +19,8 @@ class Card extends React.Component {
             <TextContent text={text}/>
             {media ? <ImgContent media={media}/>
                    : media}
-            <Actions />
+            <Actions retweet_count={retweet_count}
+                     favorite_count={favorite_count}/>
             <hr/>
         </div>
     );

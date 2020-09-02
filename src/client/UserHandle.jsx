@@ -18,7 +18,7 @@ class UserHandle extends React.Component {
         time = `${created_at.getHours()}h`;
     }
     return (
-        <h3> {name} {screen_name} {time}</h3>
+        <h3> {name} @{screen_name} {time}</h3>
     );
   }
 }

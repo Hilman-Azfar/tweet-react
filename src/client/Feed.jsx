@@ -25,7 +25,7 @@ class Feed extends React.Component {
                 break
         }
         return (
-            <div>
+            <div id='feed'>
                 <Pills/>
                 {display}
             </div>

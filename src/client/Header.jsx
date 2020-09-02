@@ -1,11 +1,16 @@
 import React from 'react';
 
+import { tweets } from './tweets.js'
+
 class Header extends React.Component {
-  render() {
-    return (
-        <h1> Name </h1>
-    );
-  }
+    render() {
+        let { user: {name} } = tweets[0]
+        return (
+            <header>
+                <h1>{name}</h1>
+            </header>
+        );
+    }
 }
 
 export default Header;
